@@ -4,12 +4,12 @@
 
 :root {
   /* Mystic Glass palette */
-  --background: oklch(0.18 0.03 264);
-  --foreground: oklch(0.93 0.02 90);
+  --background: oklch(0.28 0.035 264);
+  --foreground: oklch(0.95 0.02 90);
 
-  --midnight: #0d1321;
-  --midnight-soft: #141c2f;
-  --midnight-deep: #080c16;
+  --midnight: #1b2540;
+  --midnight-soft: #243152;
+  --midnight-deep: #131c33;
 
   --card: oklch(0.22 0.035 262 / 0.55);
   --card-foreground: oklch(0.93 0.02 90);
@@ -98,10 +98,10 @@ body {
 /* The celestial night sky backdrop */
 .cosmic-bg {
   background:
-    radial-gradient(900px circle at 18% -10%, rgba(212, 175, 55, 0.12), transparent 55%),
-    radial-gradient(1100px circle at 95% 12%, rgba(110, 130, 200, 0.14), transparent 50%),
-    radial-gradient(800px circle at 50% 120%, rgba(212, 175, 55, 0.08), transparent 60%),
-    linear-gradient(180deg, var(--midnight-deep) 0%, var(--midnight) 45%, #0a1020 100%);
+    radial-gradient(900px circle at 18% -10%, rgba(212, 175, 55, 0.14), transparent 55%),
+    radial-gradient(1100px circle at 95% 12%, rgba(130, 150, 225, 0.18), transparent 50%),
+    radial-gradient(800px circle at 50% 120%, rgba(212, 175, 55, 0.1), transparent 60%),
+    linear-gradient(180deg, var(--midnight-deep) 0%, var(--midnight) 45%, #2a375c 100%);
 }
 
 /* Glassmorphism surface */

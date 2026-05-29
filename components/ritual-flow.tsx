@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Moon } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { Starfield } from "@/components/starfield"
 import { AstralStepper } from "@/components/astral-stepper"
 import { GoldButton } from "@/components/gold-button"
@@ -12,6 +13,7 @@ import { ReadingTable } from "@/components/reading-table"
 import { cn } from "@/lib/utils"
 
 export function RitualFlow({ onHome }: { onHome: () => void }) {
+  const { data: session } = useSession()
   const [step, setStep] = useState(0)
   const [revealed, setRevealed] = useState(false)
 
@@ -74,6 +76,24 @@ export function RitualFlow({ onHome }: { onHome: () => void }) {
               <Moon className="h-4 w-4 text-gold animate-float" strokeWidth={1.75} fill="currentColor" />
             </button>
             <h1 className="font-serif text-base tracking-[0.25em] text-gold/90 uppercase">Arcana Aurea</h1>
+            
+            {/* User Profile Image */}
+            {session?.user && (
+              <div 
+                className="absolute right-0 top-0.5 h-6 w-6 overflow-hidden rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 shadow-inner text-[10px] font-sans font-bold text-gold uppercase"
+                title={`Astral: ${session.user.name || "Usuario"}`}
+              >
+                {session.user.image ? (
+                  <img 
+                    src={session.user.image} 
+                    alt={session.user.name || "Usuario"} 
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  (session.user.name || "U").charAt(0)
+                )}
+              </div>
+            )}
           </header>
 
           {revealed ? (

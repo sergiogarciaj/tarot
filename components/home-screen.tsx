@@ -32,6 +32,23 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
 
           {/* Foreground content */}
           <div className="relative z-10 flex h-full flex-col items-center px-6 pb-6 pt-10 text-center">
+            {/* User Profile Image */}
+            {session?.user && (
+              <div 
+                className="absolute right-6 top-[30px] h-6 w-6 overflow-hidden rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 shadow-inner text-[10px] font-sans font-bold text-gold uppercase"
+                title={`Astral: ${session.user.name || "Usuario"}`}
+              >
+                {session.user.image ? (
+                  <img 
+                    src={session.user.image} 
+                    alt={session.user.name || "Usuario"} 
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  (session.user.name || "U").charAt(0)
+                )}
+              </div>
+            )}
             {/* Animated Portal */}
             <div className="animate-float relative h-36 w-28 shrink-0 flex items-center justify-center">
               {/* Back glow */}

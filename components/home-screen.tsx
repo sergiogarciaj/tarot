@@ -29,9 +29,32 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
 
           {/* Foreground content */}
           <div className="relative z-10 flex h-full flex-col items-center px-6 pb-6 pt-10 text-center">
-            {/* Emblem */}
-            <div className="animate-float h-28 w-28 shrink-0">
-              <CelestialEmblem />
+            {/* Animated Portal */}
+            <div className="animate-float relative h-36 w-28 shrink-0 flex items-center justify-center">
+              {/* Back glow */}
+              <div className="absolute inset-0 rounded-full bg-gold/10 blur-xl -z-10 animate-pulse" />
+              
+              {/* GIF Container with oval mask */}
+              <div 
+                className="relative w-full h-full overflow-hidden"
+                style={{
+                  borderRadius: "50%",
+                  maskImage: "radial-gradient(circle, black 35%, transparent 85%)",
+                  WebkitMaskImage: "radial-gradient(circle, black 35%, transparent 85%)"
+                }}
+              >
+                <Image
+                  src="/aurea.gif"
+                  alt="Aurea Celestial Portal"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  priority
+                />
+              </div>
+
+              {/* Oval gold frame */}
+              <div className="absolute inset-0 rounded-full border border-gold/25 pointer-events-none" />
             </div>
 
             {/* Title */}

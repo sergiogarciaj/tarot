@@ -17,7 +17,8 @@ interface Props {
 
 const POSITIONS = ["Pasado", "Presente", "Futuro"]
 
-function CardBack() {
+function CardBack({ size = "normal" }: { size?: "normal" | "large" }) {
+  const isLarge = size === "large"
   return (
     <div className="flex h-full w-full items-center justify-center rounded-xl border border-gold/40 bg-gradient-to-b from-midnight-soft to-midnight-deep shadow-inner p-1 select-none">
       <div className="flex h-full w-full flex-col items-center justify-between rounded-lg border border-gold/25 p-2 relative overflow-hidden">
@@ -32,7 +33,7 @@ function CardBack() {
 
         {/* Center symbol */}
         <div className="my-auto flex flex-col items-center justify-center">
-          <svg viewBox="0 0 64 64" className="h-9 w-9 text-gold/80 animate-float" fill="currentColor">
+          <svg viewBox="0 0 64 64" className={cn("text-gold/80 animate-float", isLarge ? "h-14 w-14" : "h-9 w-9")} fill="currentColor">
             <path d="M32 4 C32 4, 38 18, 48 24 C38 30, 32 44, 32 44 C32 44, 26 30, 16 24 C26 18, 32 4, 32 4 Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="32" cy="24" r="5" fill="currentColor" fillOpacity="0.4" />
           </svg>
@@ -45,33 +46,49 @@ function CardBack() {
 export function ReadingTable({ theme, horizon, question, onReset }: Props) {
   const [deck, setDeck] = useState<TarotCard[]>([])
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [stage, setStage] = useState<"selecting" | "revealing" | "reading">("selecting")
   const [flippedCards, setFlippedCards] = useState<boolean[]>([false, false, false])
 
   const themeLabel = THEMES.find((t) => t.key === theme)?.label ?? "General"
   const horizonLabel = HORIZONS.find((h) => h.key === horizon)?.label ?? "Hoy"
 
+  // Helper to shuffle array
+  const shuffleDeck = (array: TarotCard[]) => {
+    const arr = [...array]
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    return arr
+  }
+
   // Shuffle deck on mount
   useEffect(() => {
-    const shuffle = (array: TarotCard[]) => {
-      const arr = [...array]
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]]
-      }
-      return arr
-    }
-    setDeck(shuffle(TAROT_CARDS))
+    setDeck(shuffleDeck(TAROT_CARDS))
   }, [])
 
-  const handleCardClick = (index: number) => {
-    if (selectedIndices.includes(index)) {
-      // Allow deselecting if not yet locked
-      setSelectedIndices(selectedIndices.filter((i) => i !== index))
-      return
+  const handleShuffle = () => {
+    setDeck(shuffleDeck(TAROT_CARDS))
+    setSelectedIndices([])
+    setCurrentIndex(0)
+  }
+
+  const moveToNextCard = () => {
+    if (deck.length === 0) return
+    let nextIdx = (currentIndex + 1) % deck.length
+    // Skip already selected cards
+    while (selectedIndices.includes(nextIdx) && selectedIndices.length < deck.length) {
+      nextIdx = (nextIdx + 1) % deck.length
     }
+    setCurrentIndex(nextIdx)
+  }
+
+  const chooseCurrentCard = () => {
+    if (deck.length === 0 || selectedIndices.includes(currentIndex)) return
+    
     if (selectedIndices.length < 3) {
-      const newSelection = [...selectedIndices, index]
+      const newSelection = [...selectedIndices, currentIndex]
       setSelectedIndices(newSelection)
 
       // Staggered transition to reveal animation once 3 cards are selected
@@ -79,6 +96,13 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
         setTimeout(() => {
           setStage("revealing")
         }, 1000)
+      } else {
+        // Move to the next unselected card automatically
+        let nextIdx = (currentIndex + 1) % deck.length
+        while (newSelection.includes(nextIdx) && newSelection.length < deck.length) {
+          nextIdx = (nextIdx + 1) % deck.length
+        }
+        setCurrentIndex(nextIdx)
       }
     }
   }
@@ -114,76 +138,87 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
   // 1. SELECTING STAGE
   if (stage === "selecting") {
     return (
-      <div className="flex h-full flex-col items-center justify-between py-2 w-full animate-step-in">
-        <div className="text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.3em] text-gold/70">{themeLabel}</p>
-          <h2 className="mt-1 font-serif text-2xl text-foreground text-glow">La Elección</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Concentra tu mente y elige 3 cartas</p>
+      <div className="flex h-full flex-col items-center justify-between py-1 w-full animate-step-in">
+        <div className="text-center shrink-0">
+          <p className="font-serif text-[10px] uppercase tracking-[0.3em] text-gold/70">{themeLabel}</p>
+          <h2 className="mt-0.5 font-serif text-xl text-foreground text-glow">La Elección</h2>
+          <p className="text-[11px] text-muted-foreground">Concentra tu mente en tu consulta</p>
         </div>
 
         {/* Selection slots */}
-        <div className="flex gap-4 my-2">
+        <div className="flex gap-4 my-2 shrink-0">
           {POSITIONS.map((pos, idx) => {
             const cardIndex = selectedIndices[idx]
             const card = cardIndex !== undefined ? deck[cardIndex] : null
 
             return (
-              <div key={pos} className="flex flex-col items-center gap-1.5">
-                <div className="w-14 h-22 rounded-lg border border-dashed border-gold/30 flex items-center justify-center bg-midnight-deep/40 relative overflow-hidden">
+              <div key={pos} className="flex flex-col items-center gap-1">
+                <div className={cn(
+                  "w-12 h-18 rounded-lg border flex items-center justify-center bg-midnight-deep/40 relative overflow-hidden transition-all duration-300",
+                  card ? "border-gold/60 shadow-[0_0_8px_rgba(212,175,55,0.3)]" : "border-dashed border-gold/20"
+                )}>
                   {card ? (
                     <div className="absolute inset-0 p-0.5">
                       <CardBack />
                     </div>
                   ) : (
-                    <span className="text-[10px] text-gold/40">{idx + 1}</span>
+                    <span className="text-[10px] text-gold/30">{idx + 1}</span>
                   )}
                 </div>
-                <span className="text-[10px] font-serif italic text-gold/60">{pos}</span>
+                <span className="text-[9px] font-serif italic text-gold/60">{pos}</span>
               </div>
             )
           })}
         </div>
 
-        {/* Horizontal scrollable deck spread */}
-        <div className="w-full relative py-6 my-2">
-          {/* Edge fade gradients */}
-          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-midnight via-midnight/50 to-transparent pointer-events-none z-10" />
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-midnight via-midnight/50 to-transparent pointer-events-none z-10" />
+        {/* Central Large Card Display */}
+        <div className="relative my-2.5 flex flex-col items-center justify-center flex-1 min-h-0">
+          {deck[currentIndex] && (
+            <div 
+              onClick={chooseCurrentCard}
+              className="relative w-36 h-56 shrink-0 cursor-pointer select-none active:scale-98 hover:scale-102 transition-all duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.6)] rounded-xl"
+            >
+              <CardBack size="large" />
+            </div>
+          )}
           
-          <div className="flex overflow-x-auto gap-0 px-8 py-4 no-scrollbar scroll-smooth snap-x">
-            {deck.map((card, idx) => {
-              const selectedOrder = selectedIndices.indexOf(idx)
-              const isSelected = selectedOrder !== -1
+          <span className="mt-2 text-[10px] font-sans text-gold/60 tracking-wider uppercase">
+            Carta {currentIndex + 1} de 78
+          </span>
+        </div>
 
-              return (
-                <div 
-                  key={idx}
-                  onClick={() => handleCardClick(idx)}
-                  className={cn(
-                    "relative w-16 h-28 shrink-0 cursor-pointer transition-all duration-300 snap-center select-none",
-                    isSelected ? "-translate-y-4 shadow-[0_0_15px_rgba(212,175,55,0.6)] scale-105" : "hover:-translate-y-2 hover:scale-102"
-                  )}
-                  style={{
-                    marginLeft: idx > 0 ? "-2.1rem" : "0",
-                    zIndex: isSelected ? 50 : idx,
-                  }}
-                >
-                  <CardBack />
-                  {isSelected && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-midnight-deep rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-md border border-gold-bright">
-                      {selectedOrder + 1}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+        {/* Control Buttons */}
+        <div className="w-full flex flex-col items-center gap-2.5 shrink-0 pt-1">
+          <div className="flex w-full items-center justify-center gap-3">
+            <button
+              onClick={handleShuffle}
+              className="glass-soft flex items-center justify-center gap-1 px-3.5 py-1.5 rounded-full text-[11px] font-serif text-gold/80 hover:text-gold transition-colors"
+              title="Barajar el mazo"
+            >
+              <RotateCcw className="h-3 w-3" strokeWidth={2} />
+              Barajar
+            </button>
+
+            <button
+              onClick={moveToNextCard}
+              className="glass flex items-center justify-center gap-1 px-4 py-1.5 rounded-full text-[11px] font-serif text-gold/80 hover:text-gold transition-colors"
+            >
+              Siguiente Carta &rarr;
+            </button>
           </div>
+
+          <GoldButton 
+            onClick={chooseCurrentCard}
+            className="w-full max-w-[200px] h-9 text-[11px] py-1.5 shadow-md"
+          >
+            Elegir esta carta
+          </GoldButton>
         </div>
 
         {/* Guidance text */}
-        <div className="w-full text-center px-4">
-          <p className="text-xs text-gold/80 italic min-h-[1.5rem]">
-            {selectedIndices.length === 0 && "Toca el mazo y desliza para ver todas las cartas..."}
+        <div className="w-full text-center px-4 mt-2 shrink-0">
+          <p className="text-[10px] text-gold/85 italic min-h-[1.2rem]">
+            {selectedIndices.length === 0 && "Elige la carta para tu Pasado..."}
             {selectedIndices.length === 1 && "Elige la carta para tu Presente..."}
             {selectedIndices.length === 2 && "Elige la carta para tu Futuro..."}
             {selectedIndices.length === 3 && "Preparando la revelación celestial..."}
@@ -278,3 +313,4 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
     </div>
   )
 }
+

@@ -287,12 +287,12 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
                     </div>
 
                     {/* Front */}
-                    <div className="absolute inset-0 backface-hidden rotate-y-180 w-full h-full rounded-xl border border-gold/50 overflow-hidden bg-midnight shadow-inner">
+                    <div className="absolute inset-0 backface-hidden rotate-y-180 w-full h-full rounded-xl border border-gold/50 bg-midnight-deep p-1 shadow-inner flex items-center justify-center">
                       {card && (
                         <img 
                           src={card.image} 
                           alt={card.name} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain rounded-lg"
                         />
                       )}
                     </div>
@@ -351,12 +351,12 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
 
       {/* Large Page-Filling Card Display */}
       <div className="relative my-2 flex flex-col items-center justify-center flex-1 min-h-0 w-full px-6">
-        <div className="relative w-64 h-[26rem] max-h-[52vh] shrink-0 shadow-[0_20px_45px_rgba(0,0,0,0.7)] rounded-2xl border border-gold/50 overflow-hidden bg-midnight-deep animate-step-in">
+        <div className="relative w-64 h-[26rem] max-h-[52vh] shrink-0 shadow-[0_20px_45px_rgba(0,0,0,0.7)] rounded-2xl border border-gold/50 bg-midnight-deep p-1.5 animate-step-in flex items-center justify-center">
           {card && (
             <img 
               src={card.image} 
               alt={card.name} 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain rounded-xl"
             />
           )}
         </div>

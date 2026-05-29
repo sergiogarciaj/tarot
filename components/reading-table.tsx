@@ -351,7 +351,7 @@ export function ReadingTable({ theme, horizon, question, onReset }: Props) {
 
       {/* Large Page-Filling Card Display */}
       <div className="relative my-2 flex flex-col items-center justify-center flex-1 min-h-0 w-full px-6">
-        <div className="relative w-48 h-76 max-h-[48vh] shrink-0 shadow-[0_20px_45px_rgba(0,0,0,0.7)] rounded-2xl border border-gold/50 overflow-hidden bg-midnight-deep animate-step-in">
+        <div className="relative w-64 h-[26rem] max-h-[52vh] shrink-0 shadow-[0_20px_45px_rgba(0,0,0,0.7)] rounded-2xl border border-gold/50 overflow-hidden bg-midnight-deep animate-step-in">
           {card && (
             <img 
               src={card.image} 

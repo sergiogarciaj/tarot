@@ -18,7 +18,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Celestial Arcana — El Ritual",
+  title: "Arcana Aurea — El Ritual",
   description:
     "Tarot digital místico en sincronía astral. Configura tu ritual y deja que el oráculo revele tu camino.",
   generator: "v0.app",

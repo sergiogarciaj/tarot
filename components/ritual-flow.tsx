@@ -66,7 +66,7 @@ export function RitualFlow() {
           {/* Header */}
           <header className="flex shrink-0 items-center justify-center gap-2 pb-5">
             <Moon className="h-4 w-4 text-gold animate-float" strokeWidth={1.75} fill="currentColor" />
-            <h1 className="font-serif text-base tracking-[0.25em] text-gold/90 uppercase">Celestial Arcana</h1>
+            <h1 className="font-serif text-base tracking-[0.25em] text-gold/90 uppercase">Arcana Aurea</h1>
           </header>
 
           {revealed ? (

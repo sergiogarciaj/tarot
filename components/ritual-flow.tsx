@@ -11,7 +11,7 @@ import { StepHorizon } from "@/components/steps/step-horizon"
 import { ReadingTable } from "@/components/reading-table"
 import { cn } from "@/lib/utils"
 
-export function RitualFlow() {
+export function RitualFlow({ onHome }: { onHome: () => void }) {
   const [step, setStep] = useState(0)
   const [revealed, setRevealed] = useState(false)
 
@@ -64,8 +64,15 @@ export function RitualFlow() {
       <div className="relative z-10 flex h-dvh w-full max-w-[420px] flex-col sm:h-[840px] sm:max-h-[92vh] sm:rounded-[2.5rem] sm:border sm:border-gold/20 sm:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
         <div className="cosmic-bg flex h-full flex-col overflow-hidden px-6 pb-6 pt-7 sm:rounded-[2.5rem]">
           {/* Header */}
-          <header className="flex shrink-0 items-center justify-center gap-2 pb-5">
-            <Moon className="h-4 w-4 text-gold animate-float" strokeWidth={1.75} fill="currentColor" />
+          <header className="relative flex shrink-0 items-center justify-center pb-5">
+            <button
+              onClick={onHome}
+              title="Volver a la portada"
+              className="absolute left-0 top-0.5 flex h-6 w-6 items-center justify-center rounded-full text-gold/80 hover:text-gold transition-all hover:bg-gold/10 hover:scale-110 active:scale-95 focus:outline-none"
+              aria-label="Volver a la portada"
+            >
+              <Moon className="h-4 w-4 text-gold animate-float" strokeWidth={1.75} fill="currentColor" />
+            </button>
             <h1 className="font-serif text-base tracking-[0.25em] text-gold/90 uppercase">Arcana Aurea</h1>
           </header>
 

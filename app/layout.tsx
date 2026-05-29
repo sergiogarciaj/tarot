@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   description:
     "Tarot digital místico en sincronía astral. Configura tu ritual y deja que el oráculo revele tu camino.",
   generator: "v0.app",
+  icons: {
+    icon: "/icon.svg",
+  },
 }
 
 export const viewport: Viewport = {

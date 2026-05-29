@@ -2,12 +2,15 @@
 
 import Image from "next/image"
 import { ChevronRight } from "lucide-react"
+import { useSession, signIn, signOut } from "next-auth/react"
 import { Starfield } from "@/components/starfield"
 import { CelestialEmblem } from "@/components/celestial-emblem"
 import { TarotFan } from "@/components/tarot-fan"
 import { GoldButton } from "@/components/gold-button"
 
 export function HomeScreen({ onStart }: { onStart: () => void }) {
+  const { data: session, status } = useSession()
+  const loading = status === "loading"
   return (
     <main className="cosmic-bg relative flex min-h-dvh items-center justify-center overflow-hidden p-0 sm:p-6">
       <Starfield />
@@ -81,11 +84,35 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
               <TarotFan className="mb-2" />
             </div>
 
-            {/* CTA */}
-            <GoldButton onClick={onStart} className="w-full shrink-0">
-              Comenzar
-              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
-            </GoldButton>
+            {/* CTA / Auth */}
+            {loading ? (
+              <div className="w-full h-12 flex items-center justify-center text-gold/60 text-sm">
+                Conectando con el cosmos...
+              </div>
+            ) : session ? (
+              <div className="w-full shrink-0 space-y-3">
+                <GoldButton onClick={onStart} className="w-full">
+                  Comenzar
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
+                </GoldButton>
+                
+                <div className="flex items-center justify-center gap-3 text-xs text-gold/70">
+                  <span>Astral: {session.user?.name}</span>
+                  <span className="text-gold/30">|</span>
+                  <button 
+                    onClick={() => signOut()} 
+                    className="underline hover:text-gold transition-colors focus:outline-none cursor-pointer"
+                  >
+                    Salir
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <GoldButton onClick={() => signIn("google")} className="w-full shrink-0">
+                Iniciar con Google
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
+              </GoldButton>
+            )}
 
             {/* Footer tagline */}
             <p className="mt-4 shrink-0 font-serif text-xs italic tracking-wide text-gold/50">

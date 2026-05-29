@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Libre_Caslon_Text, Inter } from "next/font/google"
+import { SessionProvider } from "next-auth/react"
 import "./globals.css"
 
 const libreCaslon = Libre_Caslon_Text({
@@ -42,7 +43,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${libreCaslon.variable} ${inter.variable} bg-midnight`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   )
 }

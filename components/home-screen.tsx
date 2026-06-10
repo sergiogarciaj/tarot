@@ -8,7 +8,7 @@ import { CelestialEmblem } from "@/components/celestial-emblem"
 import { TarotFan } from "@/components/tarot-fan"
 import { GoldButton } from "@/components/gold-button"
 
-export function HomeScreen({ onStart }: { onStart: () => void }) {
+export function HomeScreen({ onStart, onHistory }: { onStart: () => void; onHistory: () => void }) {
   const { data: session, status } = useSession()
   const loading = status === "loading"
   return (
@@ -31,7 +31,7 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
           </div>
 
           {/* Foreground content */}
-          <div className="relative z-10 flex h-full flex-col items-center px-6 pb-6 pt-10 text-center">
+          <div className="home-content relative z-10 flex h-full flex-col items-center px-6 pb-6 pt-10 text-center">
             {/* User Profile Image */}
             {session?.user && (
               <div 
@@ -50,7 +50,7 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
               </div>
             )}
             {/* Animated Portal */}
-            <div className="animate-float relative h-36 w-28 shrink-0 flex items-center justify-center">
+            <div className="portal-container animate-float relative flex items-center justify-center">
               {/* Back glow */}
               <div className="absolute inset-0 rounded-full bg-gold/10 blur-xl -z-10 animate-pulse" />
               
@@ -78,27 +78,27 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
             </div>
 
             {/* Title */}
-            <h1 className="mt-6 font-serif text-4xl uppercase leading-tight tracking-[0.28em] text-gold text-balance">
+            <h1 className="home-title font-serif text-4xl uppercase leading-tight tracking-[0.28em] text-gold text-balance">
               Arcana
               <br />
               Aurea
             </h1>
 
             {/* Divider */}
-            <div className="mt-3 flex items-center gap-2 text-gold/60">
+            <div className="home-divider flex items-center gap-2 text-gold/60">
               <span className="h-px w-8 bg-gold/40" />
               <span className="text-xs">&#10022;</span>
               <span className="h-px w-8 bg-gold/40" />
             </div>
 
             {/* Subtitle */}
-            <p className="mx-auto mt-5 max-w-[16rem] font-sans text-sm leading-relaxed text-foreground/75 text-pretty">
+            <p className="home-subtitle mx-auto max-w-[16rem] font-sans text-sm leading-relaxed text-foreground/75 text-pretty">
               Descubre las respuestas que el universo tiene para ti.
             </p>
 
             {/* Tarot cards */}
-            <div className="flex min-h-0 flex-1 items-end justify-center">
-              <TarotFan className="mb-2" />
+            <div className="tarot-fan-wrap">
+              <TarotFan />
             </div>
 
             {/* CTA / Auth */}
@@ -112,6 +112,13 @@ export function HomeScreen({ onStart }: { onStart: () => void }) {
                   Comenzar
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
                 </GoldButton>
+
+                <button
+                  onClick={onHistory}
+                  className="w-full h-11 rounded-full border border-gold/30 bg-midnight-deep/40 text-gold text-xs font-serif tracking-wider uppercase transition-all duration-300 hover:border-gold hover:bg-gold/10 hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] cursor-pointer"
+                >
+                  Historial de Lecturas
+                </button>
                 
                 <div className="flex items-center justify-center gap-3 text-xs text-gold/70">
                   <span>Astral: {session.user?.name}</span>

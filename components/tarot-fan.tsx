@@ -27,7 +27,7 @@ function Card({
 
 export function TarotFan({ className }: { className?: string }) {
   return (
-    <div aria-hidden className={cn("relative mx-auto h-48 w-64", className)}>
+    <div aria-hidden className={cn("tarot-fan-container relative mx-auto", className)}>
       {/* Left card */}
       <Card style={{ transform: "translateX(-50%) rotate(-16deg) translateY(10px)" }} />
       {/* Right card */}

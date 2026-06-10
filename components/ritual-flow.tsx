@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, Moon } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { Starfield } from "@/components/starfield"
@@ -12,7 +12,7 @@ import { StepHorizon } from "@/components/steps/step-horizon"
 import { ReadingTable } from "@/components/reading-table"
 import { cn } from "@/lib/utils"
 
-export function RitualFlow({ onHome }: { onHome: () => void }) {
+export function RitualFlow({ onHome, readingType }: { onHome: () => void; readingType: "trinidad" | "cruz" | "siono" }) {
   const { data: session } = useSession()
   const [step, setStep] = useState(0)
   const [revealed, setRevealed] = useState(false)
@@ -26,6 +26,22 @@ export function RitualFlow({ onHome }: { onHome: () => void }) {
   const [unknownTime, setUnknownTime] = useState(false)
   // Step 3
   const [horizon, setHorizon] = useState<string | null>(null)
+
+  // Fetch birth date profile on mount / session change
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch("/api/user-profile")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.profile) {
+            setBirthDate(data.profile.birthDate || "")
+            setBirthTime(data.profile.birthTime || "")
+            setUnknownTime(Boolean(data.profile.unknownTime))
+          }
+        })
+        .catch((err) => console.error("Error loading user profile:", err))
+    }
+  }, [session])
 
   const canContinue =
     step === 0 ? theme !== null : step === 1 ? birthDate !== "" && (unknownTime || birthTime !== "") : horizon !== null
@@ -64,7 +80,10 @@ export function RitualFlow({ onHome }: { onHome: () => void }) {
 
       {/* Device frame */}
       <div className="relative z-10 flex h-dvh w-full max-w-[420px] flex-col sm:h-[840px] sm:max-h-[92vh] sm:rounded-[2.5rem] sm:border sm:border-gold/20 sm:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
-        <div className="cosmic-bg flex h-full flex-col overflow-hidden px-6 pb-6 pt-7 sm:rounded-[2.5rem]">
+        <div className={cn(
+          "cosmic-bg flex h-full flex-col overflow-hidden pb-6 pt-7 sm:rounded-[2.5rem] transition-all duration-300",
+          revealed ? "px-4" : "px-6"
+        )}>
           {/* Header */}
           <header className="relative flex shrink-0 items-center justify-center pb-5">
             <button
@@ -98,7 +117,16 @@ export function RitualFlow({ onHome }: { onHome: () => void }) {
 
           {revealed ? (
             <div className="animate-step-in flex min-h-0 flex-1">
-              <ReadingTable theme={theme} horizon={horizon} question={question} onReset={reset} />
+              <ReadingTable 
+                theme={theme} 
+                horizon={horizon} 
+                question={question} 
+                birthDate={birthDate}
+                birthTime={birthTime}
+                unknownTime={unknownTime}
+                onReset={reset} 
+                readingType={readingType}
+              />
             </div>
           ) : (
             <>

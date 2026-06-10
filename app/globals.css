@@ -229,3 +229,130 @@ body {
   transform: rotateY(180deg);
 }
 
+/* Responsive Home Screen tweaks for different viewport heights */
+.home-content {
+  transition: padding 0.3s ease;
+}
+
+.portal-container {
+  width: 112px; /* w-28 */
+  height: 144px; /* h-36 */
+  flex-shrink: 0;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.home-title {
+  margin-top: 1.5rem; /* mt-6 */
+  transition: margin-top 0.3s ease, font-size 0.3s ease;
+}
+
+.home-divider {
+  margin-top: 0.75rem; /* mt-3 */
+  transition: margin-top 0.3s ease;
+}
+
+.home-subtitle {
+  margin-top: 1.25rem; /* mt-5 */
+  transition: margin-top 0.3s ease, font-size 0.3s ease;
+}
+
+.tarot-fan-wrap {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0%;
+  align-items: end;
+  justify-content: center;
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.tarot-fan-container {
+  width: 256px; /* w-64 */
+  height: 192px; /* h-48 */
+  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+@media (max-height: 780px) {
+  .home-content {
+    padding-top: 1.5rem !important; /* pt-6 */
+  }
+  .portal-container {
+    width: 96px;
+    height: 120px;
+  }
+  .home-title {
+    margin-top: 1rem;
+    font-size: 1.875rem !important; /* text-3xl */
+  }
+  .home-divider {
+    margin-top: 0.5rem;
+  }
+  .home-subtitle {
+    margin-top: 0.75rem;
+  }
+  .tarot-fan-container {
+    width: 218px;
+    height: 163px;
+    transform: scale(0.85);
+    transform-origin: bottom center;
+  }
+}
+
+@media (max-height: 680px) {
+  .home-content {
+    padding-top: 1rem !important; /* pt-4 */
+    padding-bottom: 1rem !important; /* pb-4 */
+  }
+  .portal-container {
+    width: 80px;
+    height: 100px;
+  }
+  .home-title {
+    margin-top: 0.75rem;
+    font-size: 1.5rem !important; /* text-2xl */
+  }
+  .home-divider {
+    margin-top: 0.25rem;
+  }
+  .home-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.85rem !important;
+    line-height: 1.15rem !important;
+  }
+  .tarot-fan-container {
+    width: 179px;
+    height: 134px;
+    transform: scale(0.7);
+    transform-origin: bottom center;
+  }
+}
+
+@media (max-height: 580px) {
+  .home-content {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  .portal-container {
+    width: 64px;
+    height: 80px;
+  }
+  .home-title {
+    margin-top: 0.5rem;
+    font-size: 1.25rem !important; /* text-xl */
+  }
+  .home-divider {
+    display: none;
+  }
+  .home-subtitle {
+    margin-top: 0.25rem;
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+  .tarot-fan-container {
+    width: 140px;
+    height: 105px;
+    transform: scale(0.55);
+    transform-origin: bottom center;
+  }
+}
+
+
